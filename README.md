@@ -43,13 +43,11 @@ Returns:
 - Fold EV
 - Final decision (CALL / FOLD)
 
-# **Example**
+# **💰 Result Example**
 
-hero = ['Jh', 'Qs']
-villain_range = parser.parse_range("8hTd")
-board = ['Jd', '9h', 'Ts']
-equity = range_vs_range_equity(hero, villain_range, board)
-result = decide_call_or_fold(equity, pot=100, call_cost=50)
+- Hero Hands: ['Jh', 'Qs'], Hero Equity: 69.04%
+- equity: 69.04%, call_ev: 53.5600, fold_ev: 0, decision: CALL
+- Break Even Equity: 33.33%
 
 # **📊 Insights**
 
