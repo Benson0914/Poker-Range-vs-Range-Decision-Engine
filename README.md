@@ -85,6 +85,8 @@ Decision: CALL
 Quarter Kelly Allocation:
 6.12% of bankroll
 ```
+![alt text](range_matrix.png 'range_matrix')
+
 # **Project Motivation**
 
 This project was inspired by the similarities between poker and quantitative trading:
