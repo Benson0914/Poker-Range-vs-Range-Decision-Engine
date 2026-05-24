@@ -1,70 +1,125 @@
-# Poker-Range-vs-Range-Decision-Engine
+# Bayesian Poker Range Decision Engine
 # **🧠 Overview**
 
-This project simulates decision-making under uncertainty using a poker framework.
-It models range-vs-range interactions and evaluates expected value (EV) to determine optimal actions (call or fold).
-The goal is to demonstrate probabilistic thinking and decision-making under incomplete information, similar to trading environments.
+This project is a simplified poker decision engine built to explore probabilistic decision-making under incomplete information.
+
+The framework combines:
+
+- Monte Carlo equity simulation
+- Bayesian opponent range updating
+- Expected value (EV) calculations
+- Kelly Criterion capital allocation
+- Range-weighted sampling under uncertainty
+
+Rather than treating an opponent’s hand range as static, the model dynamically adjusts posterior hand probabilities after observing betting actions.
+
+The project was built primarily as a quantitative decision-making and simulation exercise inspired by concepts from trading, risk management, and probabilistic inference.
 
 # **⚙️ Key Components**
 
-**1. Range Parsing**
+## **1. Range Parsing**
 
-- Supports inputs such as:
-    - AA, 88+, AKs, AJo
-- Generates all possible hand combinations using combinatorics
+The engine converts poker range notation such as:
 
-**2. Monte Carlo Simulation**
 
-- Simulates random outcomes given:
-    - Hero hand
-    - Villain range
-    - Partial board (e.g., flop)
-- Handles:
-    - Dead card removal
-    - Random board completion
-- Outputs:
-    - Equity (win probability)
+```ruby
+"TT+,AJs+,KQs,QJs"
+```
 
-**3. Expected Value (EV) Calculation**
+into explicit weighted hand combinations.
 
-Decision rule:
+This allows simulation over full opponent distributions rather than single fixed hands.
 
-- Call EV:
-EV = equity × (pot + call_cost) − call_cost
-- Fold EV = 0
-- Choose action with higher EV
+## **2. Bayesian Range Updating**
 
-**4. Decision Engine**
+After observing an opponent action (e.g. aggressive flop continuation bet), the model updates hand probabilities using Bayesian inference:
 
-Returns:
+### $P(Hand | Action) \propto P(Action | Hand) \times P(Hand)$
 
-- Equity
-- Call EV
-- Fold EV
-- Final decision (CALL / FOLD)
+Stronger hands receive higher posterior weights while weaker hands are discounted.
 
-# **💰 Result Example**
+This creates a dynamic probabilistic opponent profile.
 
-- Hero Hands: ['Jh', 'Qs'], Hero Equity: 69.04%
-- equity: 69.04%, call_ev: 53.5600, fold_ev: 0, decision: CALL
-- Break Even Equity: 33.33%
+## **3. Monte Carlo Equity Simulation**
 
-# **📊 Insights**
+The engine performs weighted Monte Carlo simulations to estimate:
 
-- Demonstrates decision-making under uncertainty
-- Shows how small changes in equity affect optimal action
-- Highlights the importance of edge and risk-reward trade-offs
+- Hero equity
+- expected value
+- break-even thresholds
 
-# **Limitations**
+Posterior-weighted opponent ranges are sampled repeatedly across randomized future board runouts.
 
-- Assumes equal weighting across opponent ranges
-- Single-street model (no future betting)
-- Monte Carlo approximation introduces variance
+## **4. Decision Framework**
 
-# **Relevance to Quant Trading**
+The framework evaluates:
 
+- call EV
+- break-even equity
+- bankroll-adjusted Kelly allocation
+
+to determine whether a decision has positive expected value.
+
+## **Example Workflow**
+
+1. Initialize opponent prior range
+2. Observe betting action
+3. Apply Bayesian posterior update
+4. Run weighted Monte Carlo simulation
+5. Compute EV and Kelly sizing
+6. Output decision recommendation
+
+## **Sample Output**
 This project reflects key aspects of trading:
 
 - Expected value-based decision-making
 - Managing uncertainty and incomplete information
 - Evaluating edge and risk trade-offs
+```
+Hero Equity: 61.42%
+Break-Even Equity: 25.00%
+Expected Value: +72.13
+
+Decision: CALL
+
+Quarter Kelly Allocation:
+6.12% of bankroll
+```
+# **Project Motivation**
+
+This project was inspired by the similarities between poker and quantitative trading:
+
+- decision-making under uncertainty
+- probabilistic reasoning
+- incomplete information
+- dynamic belief updating
+- risk-adjusted capital allocation
+
+The goal was not to build a production poker solver, but rather to explore how Bayesian inference and simulation methods can be applied to sequential decision systems.
+
+# **Limitations**
+
+This is intentionally a simplified framework.
+
+Current limitations include:
+
+- simplified opponent behavior assumptions
+- no bet sizing inference
+- no game-theoretic equilibrium modeling
+- no reinforcement learning
+- no multi-street recursive solving
+
+Future improvements could include:
+
+- action-frequency calibration
+- dynamic bet sizing likelihoods
+- opponent profiling
+- vectorized simulation optimization
+
+# **Technologies**
+
+- Python
+- treys
+- Monte Carlo simulation
+- Bayesian inference
+- Kelly Criterion
